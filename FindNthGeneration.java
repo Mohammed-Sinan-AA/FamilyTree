@@ -1,23 +1,19 @@
 import java.util.*;
 
-public class FindNthGeneration {
+public class Test {
     private static class Member {
         private String name;
         private List<Member> children;
-
         public Member(String name) {
             this.name = name;
             this.children = new ArrayList<>();
         }
-
         public void addChild(Member child) {
             children.add(child);
         }
-
         public String getName() {
             return name;
         }
-
         public List<Member> getChildren() {
             return children;
         }
