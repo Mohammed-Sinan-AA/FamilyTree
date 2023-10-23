@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Test {
+public class FamilyTree {
     private static class Member {
         private String name;
         private List<Member> children;
