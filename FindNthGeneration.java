@@ -1,38 +1,60 @@
-import java.util.Map;
-import java.util.List;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.ArrayList;
+import java.util.*;
 
 public class FindNthGeneration {
-    public static void main(String[] args) {
-        Map<String, List<String>> familyTree = new HashMap<>();
+    private static class Member {
+        private String name;
+        private List<Member> children;
 
-        familyTree.put("Alice", Arrays.asList("Bob", "Carol"));
-        familyTree.put("Bob", Arrays.asList("Dave", "Eve"));
+        public Member(String name) {
+            this.name = name;
+            this.children = new ArrayList<>();
+        }
 
-        List<String> secondGeneration = getNthGeneration(familyTree, 2);
+        public void addChild(Member child) {
+            children.add(child);
+        }
 
-        System.out.println("2nd generation:");
-        for (String member : secondGeneration) {
-            System.out.println(member);
+        public String getName() {
+            return name;
+        }
+
+        public List<Member> getChildren() {
+            return children;
         }
     }
-    private static List<String> getNthGeneration(Map<String, List<String>> familyTree, int n) {
-        if (familyTree == null) {
-            return null;
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the name of the root member: ");
+        String rootName = scanner.next();
+
+        Member root = new Member(rootName);
+        addChildren(scanner, root);
+
+        for (Member child : root.getChildren()) {
+            Collections.sort(child.getChildren(), Comparator.comparing(Member::getName));
         }
 
-        if (n == 0) {
-            return new ArrayList<>(familyTree.keySet());
-        } else {
-            List<String> nextGeneration = new ArrayList<>();
-            for (String member : getNthGeneration(familyTree, n - 1)) {
-                if (familyTree.get(member) != null) {
-                    nextGeneration.addAll(familyTree.get(member));
-                }
-            }
-            return nextGeneration;
+        printFamilyTree(root, 0);
+    }
+
+    private static void addChildren(Scanner scanner, Member parent) {
+        System.out.print("Enter the number of children for " + parent.getName() + ": ");
+        int numChildren = scanner.nextInt();
+        for (int i = 0; i < numChildren; i++) {
+            System.out.print("Enter the name of child #" + (i + 1) + ": ");
+            String childName = scanner.next();
+            Member child = new Member(childName);
+            parent.addChild(child);
+            addChildren(scanner, child);
+        }
+    }
+
+    private static void printFamilyTree(Member member, int level) {
+        String spaces = "  ".repeat(level);
+        System.out.println(spaces + member.getName());
+        for (Member child : member.getChildren()) {
+            printFamilyTree(child, level + 1);
         }
     }
 }
